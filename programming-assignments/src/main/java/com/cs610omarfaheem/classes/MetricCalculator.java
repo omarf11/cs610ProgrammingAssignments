@@ -7,22 +7,23 @@ public class MetricCalculator {
     
 
     public void calculateAndPrintMetrics(String option, List<ServiceStation> serviceStations, Queue<Passenger> remainingQueue, int serviceRate, int duration) {
-        int maxQueueLength = 0;
         double totalWaitingTime = 0;
         int totalPassengersServed = 0;
+        int maxPassergengerWaitTime = 0;
+
     
         for (ServiceStation station : serviceStations) {
-            int queueLength = station.queue.size();
-            maxQueueLength = Math.max(maxQueueLength, queueLength);
+            
     
             double stationTotalWaitingTime = 0;
             int passengersInService = 0;
     
-            for (Passenger passenger : station.queue) {
+            for (Passenger passenger : station.servicedPassengers) {
                 stationTotalWaitingTime += passenger.waitingTime;
-    
+
+                maxPassergengerWaitTime = Math.max(maxPassergengerWaitTime, passenger.waitingTime);
                 // Only count passengers that have completed service
-                if (passenger.serviceTime <= 0) {
+                if (passenger.hasBeenServiced) {
                     passengersInService++;
                 }
             }
@@ -39,16 +40,15 @@ public class MetricCalculator {
             System.out.println("Station " + serviceStations.indexOf(station) + " - Occupancy Rate: " + occupancyRate + "%");
         }
     
-        // Include passengers remaining in the queue after simulation ends
-        maxQueueLength = Math.max(maxQueueLength, remainingQueue.size());
         totalPassengersServed += remainingQueue.size();
     
         double averageWaitingTime = totalPassengersServed == 0 ? 0 : totalWaitingTime / totalPassengersServed;
     
         System.out.println("Metrics for " + option + ":");
-        System.out.println("Max Queue Length: " + maxQueueLength);
         System.out.println("Average Waiting Time: " + averageWaitingTime);
-        // You can print other metrics like service station occupancy here
-        System.out.println();
+        System.out.println("Max Waiting Time: " + maxPassergengerWaitTime);
+        System.out.println("Total Passengers served: " + totalPassengersServed);
+        System.out.println("Remaining Queue Size: " + remainingQueue.size());
+
     }
 }

@@ -25,48 +25,53 @@ public class Simulator {
         Queue<Passenger> singleQueue = new LinkedList<>();
         Random random = new Random();
         int currentTime = 0;
+        int maxQLenght = 0;
 
-
-        while (currentTime < duration || !singleQueue.isEmpty()) {
-
-
+        while (currentTime <= duration) {
+            
             // Generate random arrivals
-            if (random.nextDouble() < 1.0 / arrivalRate) {
+            if (random.nextDouble() < (1.0 / arrivalRate)) {
                 int serviceTime = (int) (serviceRate * (1 + random.nextDouble()));
                 Passenger newPassenger = new Passenger(currentTime, serviceTime);
+                // System.out.println("service TIME "+ newPassenger.serviceTime);
+
                 singleQueue.add(newPassenger);
             }
+            maxQLenght = Math.max(maxQLenght , singleQueue.size());
 
 
             // Process passengers in the single queue
             for (ServiceStation station : serviceStations) {
-                if (!singleQueue.isEmpty() && station.queue.isEmpty()) {
+                if (!singleQueue.isEmpty() && station.currentPassenger == null ) {
                     Passenger nextPassenger = singleQueue.poll();
                     nextPassenger.waitingTime = currentTime - nextPassenger.arrivalTime;
+                    
                     station.totalTime += nextPassenger.serviceTime;
-                    station.queue.add(nextPassenger);
+                    station.setCurrentPassenger(station.servicePassenger(nextPassenger));
                 }
             }
 
-            // Update service station queues
+            // Update service station
             for (ServiceStation station : serviceStations) {
-                if (!station.queue.isEmpty()) {
-                    Passenger currentPassenger = station.queue.peek();
+                if (station.currentPassenger != null) {
+                    Passenger currentPassenger = station.getCurrentPassenger();
                     currentPassenger.serviceTime--;
 
-                    if (currentPassenger.serviceTime == 0) {
-                        station.queue.poll();
+                    if (currentPassenger.serviceTime <= 0 && currentPassenger != null) {
+                        station.servicedPassengers.add(station.finishPassenger(currentPassenger));
+                        station.setCurrentPassenger(null);
                     }
                 }
             }
-
             currentTime++;
         }
-
-        System.out.println(" sim calculating metrics");
-
+        
         // Calculate and print metrics
         MetricCalculator metricCalculator = new MetricCalculator();
-        metricCalculator.calculateAndPrintMetrics("Option 1", serviceStations, singleQueue, serviceRate,duration);
+        System.out.println();
+
+        metricCalculator.calculateAndPrintMetrics("Option 1", serviceStations, singleQueue, serviceRate ,duration);
+        System.out.println("Total Duration: " + currentTime);
+        System.out.println("Max Queue length " + maxQLenght);
     }
 }
