@@ -22,8 +22,8 @@ public class App {
         System.out.println();
         simulator2.simulateOption2A(duration, arrivalRate, serviceRate, NUM_SERVICE_STATIONS);
         System.out.println();
-        simulator2B.simulateOption2B(duration, arrivalRate, serviceRate, serviceRate);
+        simulator2B.simulateOption2B(duration, arrivalRate, serviceRate, NUM_SERVICE_STATIONS);
         System.out.println();
-        simulator2C.simulateOption2C(duration, arrivalRate, serviceRate, serviceRate);
+        simulator2C.simulateOption2C(duration, arrivalRate, serviceRate, NUM_SERVICE_STATIONS);
     }
 }

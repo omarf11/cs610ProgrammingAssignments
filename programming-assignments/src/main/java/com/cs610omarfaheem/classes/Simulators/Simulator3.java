@@ -5,8 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Random;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
+
 
 import com.cs610omarfaheem.classes.MetricCalculator2;
 import com.cs610omarfaheem.classes.Passenger;
@@ -21,6 +20,9 @@ public class Simulator3 {
     for (int i = 0; i < NUM_SERVICE_STATIONS; i++) {
         serviceStations.add(new ServiceStation());
     }
+    System.out.println("STATIONSSS WTFFFFFF" + serviceStations.size());
+    System.out.println("num of station>>>" + NUM_SERVICE_STATIONS);
+
 
     Random random = new Random();
     int currentTime = 0;

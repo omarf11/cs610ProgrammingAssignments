@@ -12,6 +12,7 @@ public class MetricCalculator2 {
         int maxPassergengerWaitTime = 0;
 
     
+        System.out.println("STATIONSSS " + serviceStations.size());
         for (ServiceStation station : serviceStations) {
             double stationTotalWaitingTime = 0;
             int passengersInService = 0;
