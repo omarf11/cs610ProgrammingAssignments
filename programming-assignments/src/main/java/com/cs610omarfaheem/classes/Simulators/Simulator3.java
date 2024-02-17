@@ -20,8 +20,7 @@ public class Simulator3 {
     for (int i = 0; i < NUM_SERVICE_STATIONS; i++) {
         serviceStations.add(new ServiceStation());
     }
-    System.out.println("STATIONSSS WTFFFFFF" + serviceStations.size());
-    System.out.println("num of station>>>" + NUM_SERVICE_STATIONS);
+    
 
 
     Random random = new Random();
