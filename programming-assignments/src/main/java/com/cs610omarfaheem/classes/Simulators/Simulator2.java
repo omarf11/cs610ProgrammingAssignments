@@ -76,8 +76,10 @@ public class Simulator2 {
 
         // Calculate and print metrics
         MetricCalculator2 metricCalculator = new MetricCalculator2();
+        final Queue<Passenger> remainingQueue = new LinkedList<>();
+    serviceStations.forEach(station -> remainingQueue.addAll(station.queue));
 
-        metricCalculator.calculateAndPrintMetrics("Option 2A", serviceStations, roundRobinQueue , serviceRate,duration);
+        metricCalculator.calculateAndPrintMetrics("Option 2A", serviceStations, remainingQueue , serviceRate,duration);
         System.out.println("Total Duration: " + currentTime);
 
     }

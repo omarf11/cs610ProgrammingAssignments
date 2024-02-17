@@ -38,6 +38,7 @@ public class Simulator3 {
         }
 
         for (ServiceStation station : serviceStations) {
+            station.maxQLength = Math.max(station.maxQLength, station.queue.size());
             if (!station.queue.isEmpty() && station.currentPassenger == null ) {
                 Passenger nextPassenger = station.queue.poll();
                 nextPassenger.waitingTime = currentTime - nextPassenger.arrivalTime;
