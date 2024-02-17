@@ -33,7 +33,6 @@ public class Simulator {
             if (random.nextDouble() < (1.0 / arrivalRate)) {
                 int serviceTime = (int) (serviceRate * (1 + random.nextDouble()));
                 Passenger newPassenger = new Passenger(currentTime, serviceTime);
-                // System.out.println("service TIME "+ newPassenger.serviceTime);
 
                 singleQueue.add(newPassenger);
             }

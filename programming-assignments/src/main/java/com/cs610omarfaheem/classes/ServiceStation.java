@@ -13,6 +13,7 @@ public class ServiceStation {
     public Passenger currentPassenger;
     public List<Passenger> servicedPassengers = new ArrayList<>();
     public Queue<Passenger> queue = new LinkedList<>();
+    public int maxQLength = 0;
 
     public Passenger servicePassenger(Passenger passenger){
         passenger.isServicing = true;

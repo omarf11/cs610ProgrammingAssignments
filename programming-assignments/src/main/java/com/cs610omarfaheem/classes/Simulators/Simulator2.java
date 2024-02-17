@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Random;
 
-import com.cs610omarfaheem.classes.MetricCalculator;
+import com.cs610omarfaheem.classes.MetricCalculator2;
 import com.cs610omarfaheem.classes.Passenger;
 import com.cs610omarfaheem.classes.ServiceStation;
 
@@ -25,35 +25,48 @@ public class Simulator2 {
         Queue<Passenger> roundRobinQueue = new LinkedList<>();
         Random random = new Random();
         int currentTime = 0;
+        int stationIndex = 0;
     
-        while (currentTime < duration || !roundRobinQueue.isEmpty()) {
+        while (currentTime < duration) {
             // Generate random arrivals
             if (random.nextDouble() < 1.0 / arrivalRate) {
                 int serviceTime = (int) (serviceRate * (1 + random.nextDouble()));
                 Passenger newPassenger = new Passenger(currentTime, serviceTime);
                 roundRobinQueue.add(newPassenger);
-    
-                // Update waiting time when passenger is added to the queue
-                newPassenger.waitingTime = currentTime - newPassenger.arrivalTime;
             }
     
             // Distribute passengers in round-robin fashion
+            while (!roundRobinQueue.isEmpty()) {
+                int tempMaxQlength = serviceStations.get(stationIndex).maxQLength;
+                Passenger nextPassenger = roundRobinQueue.poll();
+                serviceStations.get(stationIndex).queue.add(nextPassenger);
+                //setting max q length after we add a passenger to a stations queue
+                serviceStations.get(stationIndex).maxQLength = Math.max(tempMaxQlength , serviceStations.get(stationIndex).queue.size() );
+                stationIndex++;
+                if (stationIndex == NUM_SERVICE_STATIONS) {
+                    stationIndex = 0;
+                }
+            }
+            // Process passengers in the each queue
             for (ServiceStation station : serviceStations) {
-                if (!roundRobinQueue.isEmpty()) {
-                    Passenger nextPassenger = roundRobinQueue.poll();
+                if (!station.queue.isEmpty() && station.currentPassenger == null ) {
+                    Passenger nextPassenger = station.queue.poll();
+                    nextPassenger.waitingTime = currentTime - nextPassenger.arrivalTime;
+
                     station.totalTime += nextPassenger.serviceTime;
-                    station.queue.add(nextPassenger);
+                    station.setCurrentPassenger(station.servicePassenger(nextPassenger));
                 }
             }
     
             // Update service station queues
             for (ServiceStation station : serviceStations) {
-                if (!station.queue.isEmpty()) {
-                    Passenger currentPassenger = station.queue.peek();
+                if (station.currentPassenger != null) {
+                    Passenger currentPassenger = station.getCurrentPassenger();
                     currentPassenger.serviceTime--;
     
-                    if (currentPassenger.serviceTime <= 0) {
-                        station.queue.poll();
+                    if (currentPassenger.serviceTime <= 0 && currentPassenger != null) {
+                        station.servicedPassengers.add(station.finishPassenger(currentPassenger));
+                        station.setCurrentPassenger(null);
                     }
                 }
             }
@@ -62,8 +75,10 @@ public class Simulator2 {
         }
 
         // Calculate and print metrics
-        // MetricCalculator metricCalculator = new MetricCalculator();
+        MetricCalculator2 metricCalculator = new MetricCalculator2();
 
-        // metricCalculator.calculateAndPrintMetrics("Option 2A", serviceStations, roundRobinQueue , serviceRate,duration);
+        metricCalculator.calculateAndPrintMetrics("Option 2A", serviceStations, roundRobinQueue , serviceRate,duration);
+        System.out.println("Total Duration: " + currentTime);
+
     }
 }
