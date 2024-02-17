@@ -10,8 +10,6 @@ import com.cs610omarfaheem.classes.MetricCalculator;
 import com.cs610omarfaheem.classes.Passenger;
 import com.cs610omarfaheem.classes.ServiceStation;
 
-
-
 public class Simulator {
 
     public void simulateOption1(int duration, int arrivalRate, int serviceRate, int NUM_SERVICE_STATIONS) {
@@ -28,7 +26,7 @@ public class Simulator {
         int maxQLenght = 0;
 
         while (currentTime <= duration) {
-            
+
             // Generate random arrivals
             if (random.nextDouble() < (1.0 / arrivalRate)) {
                 int serviceTime = (int) (serviceRate * (1 + random.nextDouble()));
@@ -36,15 +34,14 @@ public class Simulator {
 
                 singleQueue.add(newPassenger);
             }
-            maxQLenght = Math.max(maxQLenght , singleQueue.size());
-
+            maxQLenght = Math.max(maxQLenght, singleQueue.size());
 
             // Process passengers in the single queue
             for (ServiceStation station : serviceStations) {
-                if (!singleQueue.isEmpty() && station.currentPassenger == null ) {
+                if (!singleQueue.isEmpty() && station.currentPassenger == null) {
                     Passenger nextPassenger = singleQueue.poll();
                     nextPassenger.waitingTime = currentTime - nextPassenger.arrivalTime;
-                    
+
                     station.totalTime += nextPassenger.serviceTime;
                     station.setCurrentPassenger(station.servicePassenger(nextPassenger));
                 }
@@ -64,12 +61,12 @@ public class Simulator {
             }
             currentTime++;
         }
-        
+
         // Calculate and print metrics
         MetricCalculator metricCalculator = new MetricCalculator();
         System.out.println();
 
-        metricCalculator.calculateAndPrintMetrics("Option 1", serviceStations, singleQueue, serviceRate ,duration);
+        metricCalculator.calculateAndPrintMetrics("Option 1", serviceStations, singleQueue, serviceRate, duration);
         System.out.println("Total Duration: " + currentTime);
         System.out.println("Max Queue length " + maxQLenght);
     }

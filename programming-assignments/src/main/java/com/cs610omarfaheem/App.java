@@ -11,7 +11,7 @@ public class App {
     public static void main(String[] args) {
         int duration = 2000; // Duration of simulation in minutes
         int arrivalRate = 2; // Average arrival rate in minutes
-        int serviceRate = 10;
+        int serviceRate = 10 ;
 
         Simulator simulator = new Simulator();
         Simulator2 simulator2 = new Simulator2();
